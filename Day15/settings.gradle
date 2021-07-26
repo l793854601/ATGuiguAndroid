@@ -1,0 +1,5 @@
+rootProject.name = "Day15"
+include ':app'
+include ':animationtest'
+include ':welcomedemo'
+include ':radardemo'

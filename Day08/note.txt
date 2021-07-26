@@ -1,0 +1,281 @@
+消息机制与异步任务
+说明：
+    在Android中，只有UIThread（主线程）才能直接更新界面
+    在Android中，长时间的工作（比如下载，网络请求等）都需要在WorkerThread（子线程）中执行
+    在子线程获得服务器数据后，需要立即到主线程去更新界面显示数据
+
+    如何实现现场间通信？
+    消息机制（Handler）、异步任务（AsyncTask、已废弃）
+
+    备注：
+    Handler、AsyncTask，可能会引起内存泄露，AsyncTask本质是Thread+Handler的封装
+    AsyncTask在API 30中被废弃了，有两种替换方案：
+    1.java.util.concurrent包下的相关类，如Executor，ThreadPoolExecutor，FutureTask
+    2.kotlin并发工具：Coroutines
+
+相关API：
+    Message：消息
+    可理解为线程间通信的数据单元，可通过Message携带需要的数据
+    创建Message：Message.obtain(int what) 此方法优先从消息池中取Message，消息池中的Message不够时，再通过new Message()创建Message
+    封装数据：
+        public int what;
+        public int arg1;
+        public int arg2;
+        public Object obj;
+
+    Handler：处理器
+        Handler是Message的处理器，同时也负责消息的发送和移除操作
+        创建Handler：Handler(Looper looper);
+        发送即时消息：sendMessage(Message msg);
+        发送空消息（不含obj、arg1、arg2）：sendEmptyMessage(int what);
+        发送延时消息：sendMessageDelayed(Message msg, long delayMillis);
+        处理消息：handleMessage(Message msg);
+        移除还未处理的消息：removeMessages(int what);
+
+    MessageQueue：消息队列
+        用来存放通过Handler发送的消息
+        它是一个按Message的when排序的优先级队列
+    Looper（钩子）：循环器
+        负责循环取出MessageQueue里面的当前需要处理的Message
+        交给对应的Handler进行处理
+        处理完后，将Message缓存到消息池中，以便复用
+
+消息机制原理：
+    1.创建主线程对应的Handler对象
+    2.在子线程，创建Message对象（先从消息池取。消息池中没有Message，再创建）
+    3.通过主线程的Handler对象，发送Message到MessageQueue
+    4.Looper从MessageQueue中取出待处理的Message，交给Handler处理（调用Handler的dispatchMassage方法）
+    5.处理消息的方式：
+        Massage的callback方法
+        Handler的callback方法
+        Handler的handleMassage方法
+    6.Handler处理Message后，Looper没有立即销毁Message，而是将Message复原，并放在消息池中
+
+源码解析：
+    Message：消息
+        //  标识（id）
+        public int what;
+        //  保存int数据
+        public int arg1;
+        //  保存int数据
+        public int arg2;
+        //  保存任意数据
+        public Object obj;
+        //  记录消息应该被处理的事件
+        int when;
+        //  用来处理消息的Handler对象（发送消息的Handler对象）
+        Handler target;
+        //  处理消息的方式之一：callback（一般不用）
+        Runnable callback;
+        //  指向下一个Message对象，用于构成MassageQueue
+        Message next;
+        //  缓存Message，以便复用，最多缓存50个Message
+        private static Message sPool;
+        private static int sPoolSize = 0;
+        private static final int MAX_POOL_SIZE = 50;
+
+        //  缓存池是一个链表结构，每次取Message，都是从第一个开始取
+        public static Message obtain() {
+            synchronized (sPoolSync) {
+                if (sPool != null) {
+                    Message m = sPool;
+                    sPool = m.next;
+                    m.next = null;
+                    m.flags = 0; // clear in-use flag
+                    sPoolSize--;
+                    return m;
+                }
+            }
+            return new Message();
+        }
+
+    Handler：发送消息、处理消息、移除消息
+        //  发送消息的四个方法
+        boolean sendMessage(Message msg)
+        boolean sendMessageDelayed(Message msg, long delayMillis)
+        boolean sendEmptyMessage(int what)
+        boolean sendEmptyMessageDelayed(int what, long delayMillis)
+        //  以上四个方法，最终调用的是这个方法
+        boolean sendMessageAtTime(Message msg, long uptimeMillis)
+        //  将消息添加到消息队列
+        boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMillis) {
+            //  将发送消息的Handler对象赋值给Message对象的target属性
+            msg.target = this;
+            //  将消息添加到消息队列
+            queue.enqueueMessage(msg, uptimeMillis);
+        }
+
+        //  处理消息的回调方法
+        void handleMessage(Message msg)
+
+        //  分发消息，会用以下三种方式，处理消息
+        //      Massage的callback方法
+        //      Handler的callback方法
+        //      Handler的handleMassage方法
+        public void dispatchMessage(@NonNull Message msg) {
+            if (msg.callback != null) {
+                //  Massage的callback方法
+                //  内部会调用Message.callback.run()
+                handleCallback(msg);
+            } else {
+                if (mCallback != null) {
+                    //  Handler的callback方法
+                    if (mCallback.handleMessage(msg)) {
+                        //  如果消息不需要进一步处理（Handler的handleMassage方法），则返回
+                        return;
+                    }
+                }
+                //  Handler的handleMassage方法
+                handleMessage(msg);
+            }
+        }
+
+        //  移除消息
+        void removeMessages(int what) {
+            //  根据what，将消息从消息队列中移除
+            mQueue.removeMessages(this, what, null);
+        }
+
+    MessageQueue：存储消息的优先级队列，以Message的when排序
+        //  消息队列的头部
+        Message mMessages;
+        //  将Message添加到消息队列中
+        enqueueMessage(Message msg, long when) {
+            //  指定消息应该被处理的时间
+            msg.when = when;
+
+            if (p == null || when == 0 || when < p.when) {
+                //  将消息设置为消息队列的头部
+                msg.next = p;
+                mMessages = msg;
+                needWake = mBlocked;
+            } else {
+                //  将消息插入到消息队列中的合适的位置
+                //  最终的结果：消息队列中的消息，按照when，从小到大排列
+                Message prev;
+                for (;;) {
+                    prev = p;
+                    p = p.next;
+                    if (p == null || when < p.when) {
+                        break;
+                    }
+                    msg.next = p; // invariant: p == prev.next
+                    prev.next = msg;
+                }
+            }
+            //  通过本地方法，最终调用Looper的wake()方法
+            nativeWake(mPtr);
+        }
+
+        //  取出一个合适的对象，可能会产生阻塞
+        Message next() {
+            //  本地方法，可能处于等待状态，但不会阻塞主线程
+            nativePollOnce(ptr, nextPollTimeoutMillis);
+            //  取出消息队列中的第一个消息，并返回
+            Message msg = mMessages;
+            return msg;
+        }
+
+    Looper：从MessageQueue中获取当前需要处理的消息，并交给Handler处理
+        //  核心方法
+        static void loop() {
+            //  得到Looper对象
+            final Looper me = myLooper();
+            //  得到MessageQueue对象
+            final MessageQueue queue = me.queue;
+            //  死循环
+            for(;;) {
+                //  从MessageQueue中取出Message
+                Message msg = queue.next();
+                //  调用target（Handler），分发消息
+                msg.target.dispatchMessage(msg);
+                //  消息处理完毕，将消息放到消息池中以便复用
+                //  先清理消息，再放入缓存池的头部
+                msg.recycle()；
+            }
+        }
+
+异步任务：
+    什么是异步任务：
+    逻辑上：以多线程的方式完成的功能需求
+    API上：AsyncTask
+
+    AsyncTask的理解：
+    在没有AsyncTask之前，我们可以使用Thread+Handler实现异步任务的功能需求
+    AsyncTask是对Thread+Handler的封装，使用它更方便
+    AsyncTask封装了ThreadPool，比直接使用Thread效率要高
+
+    备注：AsyncTask在API 30中被废弃了，有两种替换方案：
+    1.java.util.concurrent包下的相关类，如Executor，ThreadPoolExecutor，FutureTask
+    2.kotlin并发工具：Coroutines
+
+相关API：
+    AsyncTask：简化Handler处理多线程通信的问题
+    AsyncTask<Params, Progress, Result>
+        Params：启动任务执行的输入参数，比如网络请求所需要的参数
+        Progress：后台任务执行的百分比
+        Result：后台任务执行完毕后返回的结果，比如String
+    execute(Params... params)：
+        启动任务，开始执行任务的执行流程
+    void onPreExecute():
+        在子线程工作开始之前，在主线程中回调，一般用来提示视图
+    Result doInBackground(Params... params)：
+        在子线程中执行，完成任务的主要工作，通常是比较耗时的
+    void onPostExecute(Result result)：
+        在doInBackground执行完毕后，在主线程中回到，一般用来更新界面
+    publicProgress(Progress progress)：
+        在子线程中，更新进度
+    void onProgressUpdate(Progress progress)：
+        在主线程回调进度更新
+
+JSON：
+    JSON（JavaScript Object Notation）是一种轻量级的数据交换格式
+    JSON数据已经是客户端与服务端交互的最常用的选择，已经很少使用xml来进行数据交互了
+
+JSON数据格式：
+    整体结构：
+    JSON数组：[]
+    JSON对象：{}
+
+    JSON数组的结构：[value1, value2, value3]
+    JSON对象的结构：{key1:value1, key2:value2, key3:value3}
+    key的数据类型：字符串
+    value的数据类型：数值、字符串、null、JSON数组、JSON对象
+
+    解析技术：
+    Android原生API：较为麻烦
+    Gson框架：较为简洁
+
+    解析方向：
+    将Java对象转换为JSON格式字符串
+    将JSON格式字符串转换为Java对象
+
+    相关API：
+    Android原生API：
+    JSONObject：JSON对象
+        JSONObject(String json)：将JSON字符串解析为JSON对象
+        Xxx getXxx(String name)：根据name，取到在JSON中对应的value
+    JsonArray：JSON数组
+        JSONArray(String json)：将JSON字符串解析为JSON数组
+        int length()：得到JSON数组中元素的个数
+        JSONObject getJSONObject(int index)：根据下标，得到JSON数组中对应的JSONObject
+    Gson框架API：
+    Gson：能解析JSON数据的类
+        Gson()：创建对象的方法
+        String toJson(Object src)：将对象转换为对应的JSON字符串
+        T fromJson(String json, Type typeOfT)：解析JSON字符串，得到对象
+    TypeToken<T>：用来得到Type的类
+        protected TypeToken()：受保护的构造方法
+        Type getType()：得到类型对象
+
+
+
+
+
+
+
+
+
+
+
+

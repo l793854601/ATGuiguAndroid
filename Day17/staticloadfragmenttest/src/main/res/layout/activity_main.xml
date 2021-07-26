@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="horizontal"
+    tools:context=".MainActivity">
+
+    <!--
+        静态加载Fragment：
+        在xml布局文件中使用<fragment>标签
+        <fragment>中必须使用android:id/android:tag（必须指定唯一标识符）
+      -->
+    <fragment
+        android:id="@+id/fragment1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:name="com.example.staticloadfragmenttest.MyFragment1" />
+
+    <fragment
+        android:id="@+id/fragment2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:name="com.example.staticloadfragmenttest.MyFragment2" />
+
+</LinearLayout>

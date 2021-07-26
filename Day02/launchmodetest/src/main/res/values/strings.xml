@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">LaunchModeTest</string>
+    <string name="activity1">界面1</string>
+    <string name="launch_activity2">启动界面2</string>
+    <string name="launch_activity1">启动界面1</string>
+    <string name="activity2">界面2</string>
+    <string name="launch_activity3">启动界面3</string>
+    <string name="activity3">界面3</string>
+</resources>

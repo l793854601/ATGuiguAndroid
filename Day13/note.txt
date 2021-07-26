@@ -1,0 +1,40 @@
+理解广播与广播接收器：
+    1.广播事件处理属于系统级的事件处理（一般事件处理属于View级的事件处理）
+    2.一个应用可以在发生特定事件时，发送Broadcast，系统中任何应用只要注册了对应的Receiver，就会接收到此Broadcast
+    3.一个应用如果对某个广播感兴趣，就可以注册对应的Receiver来接收广播
+    4.广播事件机制是应用程序（进程）之间通信的一种手段
+
+相关API：
+    Context：
+    sendBroadcast(Intent intent)：发送一般广播
+    sendOrderedBroadcast(Intent intent)：发送有序广播
+    registerReceiver(BroadcastReceiver receiver, IntentFilter intentFilter)：注册广播接收者
+    unregisterReceiver(BroadcastReceiver receiver)：解除注册广播接收者
+
+    BroadcastReceiver：
+    void onReceive(Context context, Intent intent)：收到广播的回调
+    void aboardBroadcast()：中断广播的继续传播
+    boolean isOrderedBroadcast()：判断广播是否是有序广播
+
+常见的系统广播：
+    收到短信广播：android.provider.Telephony.SMS_RECEIVED
+    开机完成广播：Intent.ACTION_BOOT_COMPLETED
+    应用被卸载：Intent.ACTION_PACKAGE_REMOVED
+    手机锁屏：Intent.ACTION_SCREEN_OFF
+    手机开屏：Intent.ACTION_SCREEN_ON
+
+静态注册与动态注册的比较：
+    注册方式：
+        静态注册：配置文件
+        动态注册：Java代码
+    注册的时间：
+        静态注册：应用安装完成/手机开机完成，注册时不会创建对象，接收到广播才会创建对象
+        动态注册：注册后创建对象
+    生命周期：
+        静态注册：应用卸载后解除注册。对象执行onReceive()方法后被回收
+        动态注册：执行unRegisterReceiver()方法后解除注册
+    应用场景：
+        静态注册：需要监听的事件为应用的整个生命周期过程中/手机开机
+        动态注册：只用于某个Activity/Service
+
+    备注：API26（Android8.0）及以后的版本，系统会对AndroidManifest.xml中注册的某些静态接收器限制，因此，非必要尽量使用动态注册接收器的方式

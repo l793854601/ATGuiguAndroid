@@ -1,0 +1,42 @@
+为什么要有ContentProvider：
+    提供给其他应用读写本身应用的数据的接口（共享数据）
+
+ContentProvider是什么：
+    ContentProvider是四大组件之一
+    当前应用使用ContentProvider将数据库表数据操作暴露给其他应用访问
+    其他应用需要使用ContentResolver来调用ContentProvider的方法
+
+相关API：
+    ContentProvider：内容提供者
+    public abstract boolean onCreate()：Provider对象创建后调用（应用安装完成或者手机启动完成）
+    Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs)：查询表数据
+    Uri insert(Uri uri, ContentValues values)：插入表数据
+    int delete(Uri uri, String selection, String[] selectionArgs)：删除表数据
+    int update(Uri uri, ContentValues values, String selection, String[] selectionArgs)：更新表数据
+
+    ContentResolver：内容提供者的解析类
+    Content.getContentResolver()：得到解析类的对象
+    insert()、delete()、update()、query()：调用provider进行数据库CRUD查询
+    unregisterContentObserver(ContentObserver observer)：解除注册uri的监听器
+    notifyChange(Uri uri, ContentObserver observer)：通知监听器
+
+    Uri：包含请求地址数据的类（Uniform Resource Identifier：统一资源标识符）
+    Uri static parse(String urlString)：得到其对象
+
+    <standard_prefix>://<authority>/<data_path>/<id>
+    content://com.example.transportationprovider/trains/122
+    standard_prefix：对应一种机制（协议）
+    authority：对应一个provider的全类名
+    data_path：对应一张表
+    id：对应表中的一条记录
+
+    UriMatcher：用于匹配Uri的容器
+    void addURI(String authority, String path, int code)：添加一个合法的URI
+    int match(Uri uri)：匹配指定的uri，返回匹配码
+
+    ContentUris：解析uri的工具类
+    long parseId(Uri contentUri)：解析uri，得到其中的id
+    Uri withAppendedId(Uri contentUri, long id) ：添加id到指定的uri中
+
+    备注：API30（Android11）及以上的版本，需要在AndroidManifest.xml中设置queries，才能正常使用ContentResolver
+    https://developer.android.google.cn/training/basics/intents/package-visibility

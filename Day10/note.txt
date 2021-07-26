@@ -1,0 +1,96 @@
+事件机制：
+理论概述：
+    布局结构：
+    ViewGroup
+        ViewGroup
+            View
+            ViewGroup
+                View
+                ...
+            ...
+        View
+        View
+        ...
+
+    坐标系：
+        以屏幕左顶点为(0, 0)，越向右，x轴的坐标越大。越向下，y轴的坐标越大。
+        可以参考iOS的坐标系
+
+    Activity是如何响应对其中的某个视图的触控操作？
+    Activity如何响应对手机的按键的操作？
+
+    MotionEvent机制（触屏）
+    KeyEvent机制（按键）
+
+MotionEvent：
+    触屏操作的理解：
+    最基本的操作类型：
+        down：手指按下
+        move：手指在屏幕上移动
+        up：手指抬起
+
+    触屏操作的顺序：
+        down->move->move->...->up
+
+    对屏幕的任何一个操作，系统都会创建一个MotionEvent对象来对应这个操作
+
+    相关API：
+    1.MotionEvent：触屏事件
+        int ACTION_DOWN：代表down
+        int ACTION_MOVE：代表move
+        int ACTION_UP：代表up
+        int getAction()：得到事件类型
+        getX()：得到事件发生的x轴坐标（相对于当前视图的左顶点）
+        getRawX()：得到事件发生的x轴坐标（相对于屏幕的左顶点）
+        getY()：得到事件发生的y轴坐标（相对于当前视图的左顶点）
+        getRawY()：得到事件发生的y轴坐标（相对于屏幕的左顶点）
+
+    2.Activity：
+        boolean dispatchTouchEvent(MotionEvent event)：分发事件
+        boolean onTouchEvent(Motion event)：处理事件的回调（优先级较View低）
+
+    3.View
+        boolean dispatchTouchEvent(MotionEvent event)：分发事件
+        boolean onTouchEvent(Motion event)：处理事件的回调
+        void setOnTouchListener(OnTouchListener l)：设置点击监听
+        void setOnLongListener(OnLongListener l)：设置长按监听
+        void setOnCreateContextMenuListener(OnCreateContextMenuListener l)：用于创建上下文菜单
+
+    4.ViewGroup
+        boolean dispatchTouchEvent(MotionEvent event)：分发事件
+        boolean onInterceptTouchEvent(MotionEvent event)：拦截事件的回调方法
+
+    触摸事件的分发与处理：
+        1.事件产生的顺序为：down->move->move->...->up
+        2.事件对象被系统创建后，首先会调用Activity的dispatchTouchEvent(MotionEvent event)方法进行分发
+        3.down在分发给视图对象的过程中要确定消费者（onTouchEvent()方法返回true），如果都返回false了，则事件的消费者只能是Activity了
+        4.后面的move和up事件，将事件分发给消费者（可能是视图，也可能是Activity）
+        5.当前事件的消费者只是决定了下一个事件优先交给它处理
+        6.每一个事件都需要一个消费者
+
+
+KeyEvent：
+
+    按键操作的理解：
+        操作的基本类型：
+        down：手指按下
+        up：手指从按键上离开
+
+    按键操作的顺序：down->down->...->up
+
+    对按键的任何一个操作，系统都会创建一个KeyEvent对象来对应这个操作
+
+    按键的长按监听：down之后，一定时间还没有up时，会触发长按监听回调
+
+    相关API：
+    KeyEvent：
+        int ACTION_DOWN = 0：标识down的常量
+        int ACTION_UP = 1：标识up的常量
+        int getAction()：得到事件类型
+        int getKeyCode()：得到按键的keyCode（唯一标识）
+
+    Activity：
+        boolean dispatchKeyEvent(KeyEvent event)：分发事件
+        boolean onKeyDown(int keyCode, KeyEvent event)：按下按键的回调
+        boolean onKeyUp(int keyCode, KeyEvent event)：松开按键的回调
+        boolean onKeyLongPress(int keyCode, KeyEvent event)：长按按键的回调

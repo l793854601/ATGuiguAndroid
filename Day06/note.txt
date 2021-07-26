@@ -1,0 +1,47 @@
+SQLite数据库存储
+说明：
+    应用运行需要保存一系列有一定结构的数据，比如公司员工信息，可以使用数据库存储
+    文件类型：.db
+    数据保存的路径：/data/data/包名/databases/xxx.db
+    默认情况下，其他应用不能访问。当前应用可以使用ContentProvider（内容提供者，四大组件之一）将数据提供给其他应用访问
+    应用卸载时，会删除数据库
+
+SQLite数据库：
+    SQLite（https://www.sqlite.org/index.html），是一款轻微的关系型数据库服务器，移动设备的数据库存储都是用SQLite
+    特点：
+    安装文件小：最小只有几百K，Android系统已经安装
+    支持多操作系统：Android、Windows Phone、iOS、Windows、Linux等
+    支持多语言：Java、PHP、C#等
+    处理速度快：比MySql、Oracle、SqlServer都要快（SQLite数据量不是特别大）
+    SQLite中的一个数据库就是一个.db文件（本质上.db的后缀都可以不指定）
+    SQLite客户端：SQLite Expert Personal
+
+相关API：
+    SQLiteOpenHelper：数据库操作的抽象帮助类
+    SQLiteOpenHelper(Context context, String name, CursorFactory factory, int version)：构造方法，指定数据库名称、版本号（数据库升级时会用到）
+    void onCreate(SQLiteDatabase db)：数据库首次创建完毕时回调，用于创建表
+    void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)：用于数据库升级
+    SQLiteDatabase getReadableDatabase()：得到数据库连接
+    SQLiteDatabase getWritableDatabase()：得到数据库连接
+        二者的区别：
+        getReadableDatabase()：先以读写的形式获取数据库连接，如果磁盘满了，则返回只读数据库连接
+        getWritableDatabase()：先以读写的形式获取数据库连接，如果磁盘满了，则插入数据会报错
+        开发中建议使用getReadableDatabase()方法得到数据库连接
+
+    SQLiteDatabase：与数据库连接的类
+    long insert()：用于执行insert SQL，返回id值
+    int update()：用于执行update SQL，返回更新数据的数量
+    int delete()：用于执行delete SQL，返回删除数据的数量
+    Cursor query()：用于执行select SQL，返回包含查询结果数据的Cursor
+    void execSql(String sql)：执行sql语句
+
+    beginTransaction()：开启事务
+    setTransactionSuccessful()：设置事务是成功
+    endTransaction()：结束事务，可能提交事务或回滚事务
+    openDatabase(String path, CursorFactory factory, int flags)：得到数据库连接
+
+    Cursor：包含所有查询结果记录的结果集对象（光标、游标）
+    int getCount()：匹配的总记录数
+    boolean moveToNext()：将游标预定到下一条记录的前面
+    Xxx getXxx(int columnIndex)：根据字段下标得到字段对应的值
+    int getColumnIndex(String colomnName)：根据字段名得到字段对应的下标

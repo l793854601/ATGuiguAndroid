@@ -1,0 +1,5 @@
+rootProject.name = "Day05"
+include ':app'
+include ':debugtest'
+include ':datastoragetest'
+include ':logintest'

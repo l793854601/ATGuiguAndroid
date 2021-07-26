@@ -1,0 +1,108 @@
+Service是什么：
+    1.Service是一个应用组件，它用来在后台完成一个时间跨度比较大的工作，且没有关联任何界面
+    2.一个Service可以完成下面这些工作：
+        访问网络
+        播放音乐
+        文件I/O操作
+        大数据量的数据库操作
+    3.服务的特点：
+        Service可在后台运行，不用与用户进行交互
+        即使应用退出（但不彻底清除应用的进程），服务也不会停止（API26及以上，系统会对后台服务限制）
+        默认情况下，Service运行在应用程序进程的主线程（UI线程）中，
+        如果需要在Service中处理一些网络连接等耗时的操作，那么应该将这些任务放在子线程中处理，避免阻塞用户界面
+
+Service的分类：
+    1.Local Service（本地服务）
+    Service与Service的启动者在同个进程中运行，两者的通信是进程内通信
+
+    2.Remote Service（远程服务）
+    Service与Service的启动者不在同一个进程中运行，这时存在一个进程间通信的问题，Android专门为此设计了AIDL来实现进程间通信
+
+启动和停止Service：
+    Service作为四大组件之一，需要声明在AndroidManifest.xml中
+
+    方式1：一般启动
+    ComponentName startService(Intent service)
+    boolean stopService(Intent name)
+
+    方式2：绑定启动
+    boolean bindService(Intent service, ServiceConnection conn, int flags)
+    void unbindService(ServiceConnection conn)
+
+    区别：1.Service启动后。是否与启动者有关联（是否可与启动者通信）？
+         2.Service对象经历的生命周期是否相同？
+
+    startService()的方式开启服务，可以长期在后台运行，但不能跟启动者通信
+    bindService()的方式绑定服务，可以与启动者通信，但不能长期在后台运行
+    如果既想让服务长期在后台运行，又想让服务与启动者通信，则需要先启动服务再绑定服务的方式
+    备注：API26及以上的版本，系统会对运行后台服务施加限制，建议使用JobScheduler
+
+    开启服务的两种方式：
+    方式1：startService()开启服务---->stopService()停止服务
+    优点：服务可以在后台长期运行（API26之前）
+    缺点：不能跟启动者通信
+    基本的生命周期：onCreate()->onStartCommand()->onDestroy()
+    如果服务已启动：onStartCommand()->onDestroy()
+
+    方式2：bindService()绑定服务---->unbindService()解绑服务
+    优点：服务可以跟启动者通信
+    缺点：不能长期运行。如果不解绑，则可能发生泄漏，如果解绑了，则服务则停止
+    生命周期：onCreate()->onBind()->onServiceConnected()->onUnbind()->onDestroy()
+    解绑已解绑的服务会抛出异常
+
+    混合开启服务的生命周期：
+    1.开启服务，然后绑定服务，如果不解绑服务，那么无法通过stopService()方法停止服务
+    2.开启服务，多次绑定/解绑服务，服务不会被停止，只能通过stopService()方法停止服务
+
+    推荐的混合开启服务的流程：
+    1.开启服务（为了确保服务可以在后台长期运行）
+    2.绑定服务（为了与帮定者通信）
+    3.调用服务中的方法
+    4.解绑服务（释放资源）
+    5.停止服务
+
+Service的生命周期：
+    1.startService()：
+        第一次调用：构造方法->onCreate()->onStartCommand()
+        后续调用：onStartCommand()
+        stopService()：onDestroy()
+
+    2.bindService()：
+        服务未启动：构造方法->onCreate()->onBind()->onServiceConnected()
+        unbindService()：onUnbind()（当所有绑定Service的绑定者与Service解绑时才会调用）->onDestroy()
+
+AIDL理解：
+    每隔应用程序都运行在自己的独立进程中，并且可以启动另一个应用进程的服务，而且经常需要在不同的进程间传递数据对象。
+    在Android平台，一个进程不能直接访问另一个进程的内存空间，所以想要对话，需要将对象分解成操作系统可以理解的基本单元，并且有序的通过进程边界。
+
+    AIDL（Android Interface Definition Language）
+    用于生成可以在Android设备上两个进程之间进行通信（IPC）的代码
+
+    如果在一个进程中（例如Activity）要调用另一个进程中（例如Service）对象的操作，就可以使用AIDL生产可序列化的参数
+
+    备注：API30（Android11）及以上的版本，客户端应用，需要配置queries，才能正确绑定远程服务并调用服务中的方法
+    https://developer.android.google.cn/training/basics/intents/package-visibility
+
+区别Activity与Service：
+    Activity：
+    1.Activity对应一个界面
+    2.应用退出，Activity对象就会被销毁
+    3.应用再次进入，启动的Activity对象是重新创建的
+
+    Service：
+    可以不与任何界面关联
+    应用退出（但不完全杀死），Service仍在继续
+    应用再次进入，启动的Service还是前面运行的Service对象
+
+区别Service与Thread：
+    Service：
+    用来在后台完成一个时间跨度比较大的工作的应用组件
+    Service的生命周期方法运行在主线程，如果Service想做持续时间较长的工作，需要启动子线程，或者使用IntentService
+    应用退出（但不完全杀死），Service仍在继续
+    应用再次进入，可以与正在运行的Service进行通信
+
+    Thread：
+    用来启动一个子线程，做一个长时间的工作
+    Thread对象的run()方法内部逻辑，在子线程执行
+    应用退出，Thread不会停止
+    应用再次进入，不能再控制前面启动的Thread

@@ -1,0 +1,6 @@
+rootProject.name = "Day17"
+include ':app'
+include ':staticloadfragmenttest'
+include ':dynamicloadfragmenttest'
+include ':fragmentlifecycletest'
+include ':newsdemo'

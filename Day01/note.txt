@@ -1,0 +1,140 @@
+1.搭建开发环境
+1）Android Studio
+2）Android SDK
+3）配置环境变量Path
+
+2、创建第一个安卓项目：HelloAndroid
+1）指定Sdk版本（compileSdkVersion、targetSdkVersion）
+2）设置Sdk最小版本（minSdkVersion）
+
+3.四个文件目录结构
+1）项目目录结构
+    HelloAndroid
+        --manifests（资产）
+            AndroidManifest.xml：应用的功能清单配置文件
+        --java（源码文件夹）
+            MainActivity：主界面Activity
+        --res（资源文件夹）
+            drawable-xxx：图片文件夹，为了适配不同分辨率的手机
+            mipmap-xxx：启动图标文件夹，为了适配不同分辨率的手机
+            layout：界面的布局文件，类似于html
+            values：常量文件夹
+                strings.xml：包含固定的字符串，在布局中引用：@string/xxx
+                colors.xml：颜色常量，在布局中引用：@color/xxx
+                themes.xml：主题
+2）apk目录结构
+    apk本质是压缩包
+    classes.dex：包含所有class文件的供DVM执行的文件
+    AndroidManifest.xml：功能清单文件
+    res：项目的资源文件夹
+    补充：apk的打包流程？
+3）Android系统文件目录结构
+    /：代表系统的根目录
+    /data/app：存放第三方的apk文件
+    /system/app：存放系统中的应用安装文件
+    /data/data/packagenames/：与应用对应的文件，在应用安装时自动生成，应用卸载时自动删除
+    /sdcard：sd卡的文件夹
+4）Sdk目录结构
+    /platforms：包含这个版本运行所需要的jar包
+    /platform-tools：包含一些开发工具，如：adb.exe、sqlite3.exe
+    /sources：包含系统的部分源码
+    /tools：包含一些开发工具，如：proguard、monitor
+
+4.应用开发工具：
+adb：Android调试工具
+DDMS：Dalvik虚拟机调试监控服务
+    Logcat：查看日志输出
+    File Explorer：查看系统内部文件
+    Devices：显示关联的Android设备
+    Emulator Control：操作控制关联的Android设备
+Log：日志工具类
+    可以分级别（verbose、debug、info、waring、error）
+    可以通过TAG、应用包名过滤
+
+5.尺寸：
+    手机的尺寸：屏幕对角线的长度，单位为英寸
+    手机的分辨率：屏幕能显示的像素的数量
+    手机的像素密度：ppi/dpi，每英寸屏幕显示的像素数量像素密度越大，显示画面细节就越细腻
+    手机的密度：Density，以160ppi为基准，即像素密度为160时，Density为1
+        ldpi：120dpi 0.75
+        mdpi：160dpi 1.0
+        hdpi：240dpi 1.5
+        xhdpi：230dpi 2.0
+
+    px：pixel，像素
+        1px的长度对应屏幕一个像素点的大小
+    dp/dip：设备无关像素
+    sp：可缩放像素
+    Android在运行时会自动酱dp/dip/sp转换为像素单位的值
+
+    dp与px比较：
+        以px为单位，dpi不同的手机，显示的长度不同
+        以dp为单位则不会变化
+
+    dp与sp的比较：
+        用户可以在系统设置中设置文本的大小
+        如果字体大小使用sp为单位，设置有效果
+        如果字体大小使用dp为单位，设置无效果
+
+    在布局文件中，视图的宽、高尽量使用match_parent/wrap_content
+                如果使用特定的值，单位用dp
+                文本大小使用sp
+
+6.相关API：
+    Activity：四大组件之一，界面
+        void onCreated()：自动调用的方法，在其中可以加载布局
+        void setContentView(int layoutId)：加载布局
+        View findViewById(int id)：根据id查找对应的视图控件
+    R：应用资源类，自动生成
+        R.drawable：包含所有图片资源标识的内部类
+        R.layout：包含所有布局资源标识的内部类
+        R.id：包含所有视图id标识的内部类
+        R.string：包含所有字符串标识的内部类
+    View/Button：视图/按钮
+        void setOnClickListener(View v)：设置视图点击监听
+    View.OnClickListener：内部接口
+        void onClick(View v)：点击事件的回调方法
+    Toast：显示文本的🌩
+        static Toast make(...)：创建一个Toast对象
+        void show()：显示Toast
+
+7.应用练习：
+    模拟下载Demo（FakeDownload）
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

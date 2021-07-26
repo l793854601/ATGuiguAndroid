@@ -1,0 +1,3 @@
+rootProject.name = "Day06"
+include ':app'
+include ':contactdemo'

@@ -1,0 +1,106 @@
+自定义控件
+
+View：
+    View类是所有用来构建用户界面的组件的基类
+    一个View对象占用屏幕上的一个矩形区域，它负责界面界面的绘制和事件处理
+    手机屏幕上所看得见摸得着的都是View
+    常见的View：TextView、Button、ImageView、EditText...
+
+ViewGroup：
+    ViewGroup是View的子类，是各种布局的基类
+    一个ViewGroup对象可以包含多个子View/ViewGroup
+    作用：控制子View的布局
+    常见的ViewGroup：LinearLayout、RelativeLayout、FrameLayout、ConstraintLayout、ScrollView、ListView、RecyclerView...
+    ViewManager：ViewGroup实现了ViewManager接口，可以添加、更新、删除子View
+
+Activity的根View：
+    DecorView，PhoneWindow的内部类，继承自FrameLayout
+
+区别View与Activity：
+    View是能显示到手机屏幕中的UI组件
+    Activity是四大组件中唯一能与用户进行直接交互的组件
+    Activity只是控制、管理View，真正显示、处理事件的是View本身
+
+显示ContentView的3种方式：
+    1.setContentView(int layoutResID)
+    2.setContentView(View view)
+    3.setContentView(View view, ViewGroup.LayoutParams params)
+
+View及其子类的生命周期：
+    创建对象:
+        创建方式：2种
+        1.代码创建
+        2.布局（通过LayoutInflater）创建
+
+        构造方法：
+        1.public View(Context context)
+        2.public View(Context context, AttributeSet attrs)
+
+        流程方法：
+        void onFinishInflate()：View的布局加载完成时回调（只有使用布局创建View时，才会回调）
+        void onAttachedToWindow()：View关联到Window时回调
+
+        补充：Activity的onResume()方法执行之后，才开始View的后续流程（测量、布局、绘制...）
+             因此，在Activity的onCreate()方法中，无法获取View真实的的宽、高
+
+    测量：计算并确定View的宽、高
+        相关方法：
+        final void measure(int widthMeasureSpec, int heightMeasureSpec)：系统在此方法中测量计算出当前视图的宽高，此方法不能重写
+        void onMeasure(int widthMeasureSpec, int heightMeasureSpec)：由measure()方法调用，在此方法中可进一步计算View真实的宽、高
+        void setMeasureDimension(int measuredWidth, int measuredHeight)：由onMeasure()方法调用，默认实现为保存计算好的宽、高
+
+
+    布局：确定视图显示的坐标（left、top、right、bottom）
+        流程方法：
+        void layout(int l, int t, int r, int b)：调用此方法，指定View的显示位置
+        void onLayout()：在layout()方法中，视图的位置改变/强制重新布局就会调用此方法，重写此方法可以设置子View的布局
+
+        强制布局：void requestLayout()
+
+    绘制：显示View的内容
+        流程方法：
+        void draw(Canvas canvas)：绘制视图通用的部分、确定绘制的流程，一般不会重写此方法
+        void onDraw(Canvas canvas)：由draw()方法调用，重写此方法，将View的内容绘制出来
+
+        强制重绘：
+        void invalidate()：只能在主线程调用，不是立即绘制完毕
+        void postInvalidate()：可以在子线程调用（内部使用了Handler）
+
+    事件处理：
+        流程方法：
+        /*
+            分发事件：
+            从外向里，一层一层分发，分发到事件发生的最里面的视图对象
+            如果返回true，则表示事件已经被处理了，就不会继续分发了
+         */
+        boolean dispatchTouchEvent(MotionEvent event)
+
+        /*
+            拦截事件：
+            如果返回true，则事件不会再继续分发了，交给自身处理
+         */
+        boolean onInterceptTouchEvent(MotionEvent event)
+
+        /*
+            处理事件1：
+            如果返回true，则表示消费了此事件，且处理事件2不会执行
+            如果返回false，则处理事件会执行
+         *
+        OnTouchListener的onTouch(MotionEvent event)
+
+        /*
+            处理事件2：
+            如果返回true，则表示消费了此事件
+         */
+        boolean onTouchEvent(MotionEvent event)
+
+        /*
+            此方法是ViewGroup的方法，作用：是否取消对子View事件的拦截
+            一般在子View中通过getParent()调用
+         */
+        void requestDisallowInterceptTouchEvent(boolean disallowIntercept)
+
+    死亡：
+        视图对象被移除（调用remove()方法）
+        Activity死亡之前
+

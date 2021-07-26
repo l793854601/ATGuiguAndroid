@@ -1,0 +1,48 @@
+常见的异常：
+1.NullPointerException
+    原因：调用对象的方法/属性，但对象为null
+2.ClassCastException
+    原因：类型转换异常
+3.ActivityNotFoundException
+    原因：没有在AndroidManifest.xml中配置Activity
+
+基本常见异常的分析步骤：
+    1.在logcat中自下而上找，尽量找到caused by
+    2.找到出现异常的类及行号，点击进入对应的行
+
+UI的定义
+    全称user interface，意为用户界面
+    UI由View和ViewGroup组成
+    View是所有视图（包括ViewGroup）的根基类
+    View在屏幕上占据一片矩形区域，并会在上面进行内容绘制
+    ViewGroup包含一些View或ViewGroup，用于控制子View的布局
+
+UI的组成
+    界面的整体布局（layout）
+    组成可视界面的各个UI组件（Component）
+
+理解UI事件
+    当用户通过手指触摸UI时，系统会自动创建对应的Event对象
+    Android中提供了多种方式拦截处理不同类型的事件
+    视图本身就可以处理发生在该视图上的事件
+
+    事件：点击事件、长按事件
+    事件源：View
+    事件监听器：Listener
+    回调方法： Listener中的方法
+
+使用UI事件
+    Android提供了很多不同类型的事件监听接口：
+    View.OnClickListener
+    View.OnLongClickListener
+    View.onTouchListener
+    View.OnCreateContextMenuListener
+    View.OnFocusChangeListener
+    View.onKeyListener
+
+    给视图添加事件监听的方式：
+    view.setOn...Listener(listener)
+
+菜单Component
+    OptionMenu
+    ContextMenu

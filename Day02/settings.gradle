@@ -1,0 +1,6 @@
+rootProject.name = "Day02"
+include ':app'
+include ':activitytest'
+include ':activitylifecycletest'
+include ':launchmodetest'
+include ':phonemessage'

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.datastoragetest">
+    <!-- 访问外部存储的权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 访问网络的权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--
+        android:usesCleartextTraffic：是否使用明文传输（Http）
+        目标API级别为27或更低的应用程序的默认值为true
+        面向API级别28或更高级别的应用默认为false
+     -->
+    <application
+        android:usesCleartextTraffic="true"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Day05">
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <activity android:name=".NSActivity" />
+        <activity android:name=".DBActivity" />
+        <activity android:name=".ESActivity" />
+        <activity android:name=".ISActivity" />
+        <activity android:name=".SPActivity" />
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

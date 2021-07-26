@@ -1,0 +1,137 @@
+什么是动画：
+    当界面因响应用户操作而发生变化时，您应为布局过渡添加动画。
+    这些动画可向用户提供有关其操作的反馈，并有助于让用户始终关注界面。
+
+    动画有下面三种情况：
+    1.同一个图形，通过在界面上进行透明度、缩放、旋转、平移的变化（View动画，补间动画）
+    2.在界面的同一个位置上，不断切换显示不同的图片（Drawable/Frame动画）
+    3.属性动画（补充）
+
+    动画的分类：
+    1.View Animation（补间动画）
+    2.Drawable/Frame Animation（帧动画）
+    3.属性动画（补充）
+
+    Android中提供了两种实现动画（补间动画）的方式：
+    1.纯编码的方式
+    2.xml配置的方式
+
+ View动画的分类：
+    单一动画（Animation）
+        缩放动画（ScaleAnimation）
+        透明度动画（AlphaAnimation）
+        旋转动画（RotateAnimation）
+        平移动画（TranslateAnimation）
+
+    组合动画（AnimationSet）
+    由多个单一动画组合在一起的动画
+
+    层次关系：
+    Object
+        Animation
+            ScaleAnimation
+            AlphaAnimation
+            RotateAnimation
+            TranslateAnimation
+            AnimationSet
+
+Animation的公共方法：
+    setDuration(long durationMillis)：设置动画持续时间（单位ms）
+    setStartOffset(long startOffset)：设置动画开始的延迟的时间（单位ms）
+    setFillBefore(boolean fillBefore)：设置动画结束时是否固定在起始状态
+    setFillAfter(boolean fillAfter)：设置动画结束时是否固定在结束状态
+    setAnimationListener(AnimationListener listener)：设置动画监听
+
+    坐标类型：
+    Animation.ABSOLUTE
+    Animation.RELATIVE_TO_SELF
+    Animation.RELATIVE_TO_PARENT
+
+    启动动画：View.startAnimation(Animation animation)
+    结束动画：View.clearAnimation()
+
+    动画监听器：AnimationListener
+    void onAnimationStart(Animation animation)：动画开始的回调
+    void onAnimationStop(Animation animation)：动画结束的回调
+    void onAnimationRepeat(Animation animation)：动画重复的回调
+
+缩放动画（Code ScaleAnimation）
+    ScaleAnimation(
+        float fromX, float toX, float fromY, float toY,
+        int pivotXType, int pivotXValue, int pivotYType, int pivotYValue)
+
+    fromX：动画开始时X轴上的缩放比例
+    toX：动画结束时X轴上的缩放比例
+    fromY：动画开始时Y轴上的缩放比例
+    toY：动画结束时Y轴上的缩放比例
+    pivotXType：X轴坐标类型（计算X轴上的偏移量的方式）
+    pivotXValue：中心点在X轴相对视图左顶点在X轴上的偏移量
+    pivotYType：Y轴坐标类型（计算Y轴上的偏移量的方式）
+    pivotYValue：中心点在Y轴相对视图左顶点在Y轴上的偏移量
+
+缩放动画（Xml ScaleAnimation）
+    <?xml version="1.0" encoding="utf-8"?>
+    <scale xmlns:android="http://schemas.android.com/apk/res/android"
+        android:fromXScale="0.0"
+        android:toXScale="1.5"
+        android:fromYScale="0.0"
+        android:toYScale="1.0"
+        android:pivotX="0%"
+        android:pivotY="0%"
+        android:startOffset="1000"
+        android:duration="3000"
+        android:fillAfter="true" />
+
+    Animation.ABSOLUTE: 数值，如100（默认单位为px）
+    Animation.RELATIVE_TO_SELF：百分数，如50%（以当前视图的宽高为基数计算）
+    Animation.RELATIVE_TO_PARENT：百分数+p，如50%p（以父视图的宽高为基数计算）
+
+Interpolator（差值器，影响动画速率）属性的使用
+    Interpolator被用来修饰动画效果，定义动画的变化率。
+    可以使存在的动画效果accelerated（加速）、decelerated（减速）、repeated（重复）等
+    @android:anim/linear_interpolator：线性变化
+    @android:anim/accelerate_interpolator：加速变化
+    @android:anim/decelerate_interpolator：加速变化
+    @android:anim/cycle_interpolator：周期循环变化
+
+Drawable/Frame动画配置
+    <animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+        android:oneshot="false">
+        <item android:drawable="@drawable/pkq_1"
+            android:duration="100" />
+        <item android:drawable="@drawable/pkq_2"
+            android:duration="100" />
+        <item android:drawable="@drawable/pkq_3"
+            android:duration="100" />
+        <item android:drawable="@drawable/pkq_4"
+            android:duration="100" />
+        <item android:drawable="@drawable/pkq_5"
+            android:duration="100" />
+    </animation-list>
+
+启动Drawable/Frame动画
+    //  得到动画背景
+    AnimationDrawable drawable = (AnimationDrawable) iv.getBackground();
+    //  启动动画
+    drawable.start();
+    //  停止动画
+    drawable.stop();
+    //  动画是否在播放
+    boolean isRunning();
+
+Activity跳转动画设置：
+    /*
+        enterAnim：Activity进入动画
+        exitAnim：Activity退出动画
+        一般在startActivity()、finish()之后调用此方法
+     */
+    void overridePendingTransition(int enterAnim, int exitAnim)
+
+
+
+
+
+
+
+
+

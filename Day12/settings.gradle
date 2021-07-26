@@ -1,0 +1,10 @@
+rootProject.name = "Day12"
+include ':app'
+include ':startservicetest'
+include ':bindservicetest'
+include ':startandbindservicetest'
+include ':aidlservice'
+include ':aidlclient'
+include ':playmusicinactivity'
+include ':playmusicinservice'
+include ':phonelistener'

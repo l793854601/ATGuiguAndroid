@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.broadcastreceivertest">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Day13">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".MyReceiver1"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.broadcastreceivertest.MyReceiver1.action" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".OrderedReceiver1">
+            <intent-filter android:priority="10">
+                <action android:name="com.example.broadcastreceivertest.OrderedReceiver.action" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".OrderedReceiver2">
+            <intent-filter android:priority="11">
+                <action android:name="com.example.broadcastreceivertest.OrderedReceiver.action" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".OrderedReceiver3">
+            <intent-filter android:priority="12">
+                <action android:name="com.example.broadcastreceivertest.OrderedReceiver.action" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".OrderedReceiver4">
+            <intent-filter android:priority="13">
+                <action android:name="com.example.broadcastreceivertest.OrderedReceiver.action" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/MyStyle"
+        android:text="Sim卡变更报警" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/MyStyle"
+        android:text="GPS定位" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/MyStyle"
+        android:text="远程销毁数据" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/MyStyle"
+        android:textColor="#ff12ff"
+        android:text="远程锁屏" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@android:style/Widget.Holo.Button"
+        android:text="确定" />
+
+</LinearLayout>

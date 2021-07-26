@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    宽度：0.0倍到1.5倍f，高度：0倍到1倍，缩放的中心点为左顶部
+    延迟1s开始
+    动画时长3s
+    动画结束后固定
+
+    Animation.ABSOLUTE: 数值，如100（默认单位为px）
+    Animation.RELATIVE_TO_SELF：百分数，如50%（以当前视图的宽高为基数计算）
+    Animation.RELATIVE_TO_PARENT：百分数+p，如50%p（以父视图的宽高为基数计算）
+ -->
+<scale xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fromXScale="0.0"
+    android:toXScale="1.5"
+    android:fromYScale="0.0"
+    android:toYScale="1.0"
+    android:pivotX="0%"
+    android:pivotY="0%"
+    android:startOffset="1000"
+    android:duration="3000"
+    android:fillAfter="true" />

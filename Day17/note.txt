@@ -1,0 +1,65 @@
+Fragment：
+    Fragment是从Android3.0开始新增的概念，中文直译为碎片
+    Fragment用来组建Activity界面的布局木块，也可以说一个Activity是由多个Fragment组成
+    Fragment有着自已对应的View、有自己的生命周期，可接受自己的输入事件，可以向正在运行的Activity中动态添加/移除Fragment
+    Fragment不能独立存在，而是必须由Activity或另一个Fragment托管，同时Fragment的生命周期受到父Activity的影响
+    Fragment的视图层次结构会成为宿主的视图层次结构的一部分，或附加到宿主的视图层次结构。
+
+Fragment所在的包：
+    1.android.app.Fragment
+    2.android.support.v4.app.Fragment（早期支持库，已不再维护）
+    3.androidx.fragment.app.Fragment（最新支持库）
+
+    支持库：可在老版本设备上使用新版本功能（向下兼容）而推出的兼容包
+    目前强烈建议使用androidx.fragment.app.Fragment中的Fragment
+
+相关API：
+    Fragment：
+    view onCreateView()：用来创建/加载布局
+    void onActivityCreated()：所属的Activity创建好时调用
+    Activity getActivity()：获取所属的Activity
+    void setArguments(Bundle bundle)：向Fragment中传递参数
+    Bundle getArguments()：得到外部传给Fragment的参数
+
+    ListFragment：Fragment子类，用来显示列表的Fragment
+    void setListAdapter(Adapter adapter)：设置列表适配器
+    void onListItemClick()：行点击事件回调
+    FragmentManager getFragmentManager()：获取FragmentManager
+
+    FragmentActivity：可以添加Fragment的Activity
+    FragmentManager getSupportFragmentManager()：获取FragmentManager
+
+    FragmentManager：
+    FragmentTransaction beginTransaction()：开启事务，可用于添加/移除Fragment等操作
+
+
+    FragmentTransaction：
+    add()、remove()、replace()：添加/移除/替换Fragment
+    commit()：提交事务（异步，不会阻塞线程）
+    commitNow()：提交事务（同步，会阻塞线程）
+    addToBackStack()：将Fragment添加到回退栈中
+
+加载Fragment：
+    Fragment的视图层次结构会成为宿主的视图层次结构的一部分，或附加到宿主的视图层次结构。
+    1.静态：
+        1）定义Fragment的子类，并加载一个布局文件
+        2）在布局文件中，通过<fragment>标签指定自定义的Fragment
+        3）<fragment>内部必须定义android:id/android:tag（必须指定唯一标识符）
+        4）承接Fragment的Activity，必须直接或间接继承自FragmentActivity
+
+    2.动态：
+
+
+Fragment生命周期：
+    onAttach()
+    onCreate()
+    onCreateView()
+    onViewCreated()
+    onActivityCreated()
+    onStart()
+    onResume()
+    onPause()
+    onStop()
+    onDestroyView()
+    onDestroy()
+    onDetach()

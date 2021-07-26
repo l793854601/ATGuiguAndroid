@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    package：指定当前应用的唯一标识（包名），不同的应用，此值不同
+ -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.day01">
+
+    <!--
+         icon：应用图标
+         label：应用名称
+         theme：应用主题
+     -->
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Day01">、
+        <!--
+            activity标签：配置（声明）应用中的Activity
+            name属性：全类名，可以省略包名部分
+            label属性：界面的标题（可省略）
+         -->
+        <activity android:name=".MainActivity"
+            android:label="@string/app_name">
+            <!--
+                使当前Activity成为主界面
+                android.intent.action.MAIN：设置此Activity为应用启动时显示的界面
+                android.intent.category.LAUNCHER：不配置此参数，则应用不会出现在手机的应用列表中
+             -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

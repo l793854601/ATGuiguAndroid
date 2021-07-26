@@ -1,0 +1,5 @@
+rootProject.name = "Day01"
+include ':app'
+include ':helloandroid'
+include ':fakedownload'
+include ':sizetest'

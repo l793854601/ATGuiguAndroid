@@ -1,0 +1,115 @@
+组件的特点：
+    它的类必须实现特定的接口或继承特定的类
+    需要在配置文件中配置（声明）其全类名
+    它的对象不是通过new来创建的，是系统自动创建的
+    它的对象有一定的生命周期，它的类中有对应的生命周期回调方法
+
+Activity的定义：
+    Activity，直译为活动，它是安卓四大应用组件之一，也是最重要、用的最多的
+    Activity用来提供一个能让用户操作并与之交互的界面
+    一个应用有多个界面，也就是包含多个Activity
+
+Intent的理解：
+    Intent，直译为意图，也就是你想要做什么或想要去哪？
+    Intent是Activity、Service、BroadcastReceiver这三个应用组件之间进行通信的信使
+    例如：在一个Activity中启动另一个Activity，则需要使用Intent
+    Intent还可以携带数据
+    注意：Intent不是Android中的四大组件之一
+
+Intent的分类：
+    显式意图：明确指定的目标组件的意图
+    - 创建对象：Intent(Context context, Class clazz)
+    - 何时使用：当操作当前自己应用的组件时使用
+
+    隐示意图：没有明确指定目标组件的意图
+    - 创建对象：Intent(String action)
+    - 何时使用：当操作其他应用的组件时使用
+
+ IntentFilter的理解：
+    在配置Activity时，可以为Activity指定一个IntentFilter的配置
+    如果你的Activity希望其他的应用能访问到，需要配置<intent-filter>
+    如果你想启动其他应用的界面，必须使用隐示意图，且目标界面Activity配置了对应的<intent-filter>
+    举例：
+    <activity android:name=".WebActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+        </intent-filter>
+    </activity>
+
+相关API：
+    Intent：意图
+    Intent(Context context, Class clazz)：用于创建显式意图
+    Intent(String action)：用于创建隐示意图
+    putExtra(String name, Xxx value)：保存（传递）额外数据
+    Xxx getExtra(String name)：获取额外数据
+    setData(Uri data)：设置有特定个数的uri数据
+
+    Activity：活动
+    startActivity(Intent intent)：通过意图，启动Activity
+    startActivityForResult(int reqCode, Intent intent)：启动Activity，并设置回调
+    onActivityResult(int reqCode, int resultCode, Intent intent)：回调
+    setResult(int resultCode, Intent data)：设置回调的结果
+    finish()：结束Activity
+    getIntent()；获取启动Activity时的意图
+
+ 相关API（2）：
+    Activity生命周期：
+    onCreate()
+    onStart()
+    onResume()
+    onPause()
+    onRestart()
+    onStop()
+    onDestroy()
+
+    View：代表视图的根基类
+    setOnClickListener(View.OnClickListener listener)：设置点击监听
+    setOnLongClickListener(View.OnLongClickListener listener)：设置长按监听
+
+    SmsManager：发送短信的工具类
+    static SmsManager getDefault()：得到当前对象
+    sendTextMessage(...)：发送短信
+
+ 相关API（3）：
+    设置点击监听的3种方式：
+    1.Activity中添加监听：
+        view.setOnClickListener(View.OnClickListener listener)
+    2.Activity实现View.OnClickListener：
+        view.setOnClickListener(this)
+    3.layout中添加监听：
+        layout中：android:onclick="方法名"
+        Activity中：public void 方法名(View v) { }
+
+    设置长按监听：
+        view.setOnLongClickListener(View.OnLongClickListener listener)
+
+ Activity的四种状态：
+    运行状态：可见，且可操作（交互）
+    暂停状态：可见，但不可操作（交互）
+    停止状态：不可见，但对象依然存在
+    死亡状态：对象被销毁，不存在了
+
+ Activity的生命周期回调方法
+    onCreate()
+    onStart()
+    onResume()
+    onPause()
+    onRestart()
+    onStop()
+    onDestroy()
+
+ Activity的TaskStack：
+    在Android中，系统用Task Stack（back Stack）结构来存储管理启动的Activity对象
+    一个应用启动，系统就会为期创建一个对应的Task Stack来存储该应用的Activity对象
+    只有最上面的任务栈的栈顶的Activity，才能显示在窗口中
+
+ Activity的LaunchMode：
+    在Android中，启动一个Activity有时需要总是创建一个新对象，有时需要复用已有的对象
+    可以在AndroidManifest.xml中配置Activity时，通过其launchMode属性指定启动方式
+        standard：标准模式，每次调用startActivity()方法就会产生一个新的实例
+        singleTop：如果已经有一个实例位于Activity栈的顶部，则不会产生新的实例
+                   如果不位于栈顶，则会产生一个新的实例
+        singleTask：只有一个实例，默认在当前task中
+                    如果已经在栈顶，则不会产生新的实例
+                    如果不在栈顶，则会把上面的Activity清除
+        singleInstance：只有一个实例，创建时会新建一个栈，且此栈中不能有其他对象

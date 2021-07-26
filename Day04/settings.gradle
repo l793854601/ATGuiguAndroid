@@ -1,0 +1,10 @@
+rootProject.name = "Day04"
+include ':app'
+include ':layouttest'
+include ':marginpaddingtest'
+include ':arrayadaptertest'
+include ':simpleadaptertest'
+include ':baseadaptertest'
+include ':stylethemetest'
+include ':applisttest'
+include ':gridviewtest'

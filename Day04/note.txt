@@ -1,0 +1,93 @@
+常用的UI布局：
+    布局本身是不能显示任何数据的，它可以包含一些子视图，并控制子视图的布局
+    常用的布局：
+        LinearLayout
+        RelativeLayout
+        FrameLayout
+        ConstraintLayout（补充）
+        ListView
+        GridView
+        RecyclerView（补充）
+        其他
+
+LinearLayout：
+    线性布局，用来控制其子View以水平或者垂直方式布局显示
+    重要属性：
+        orientation（方向）
+        layout_weight（权重）
+
+理解LinearLayout权重：
+    layout_weight的值：
+        =0（默认值）：指定多大空间就占据多大空间
+        >0：将父视图中的可用空间进行分割，值越大权重越大，占据的比例也就越大
+
+    layout_weight的使用场景：
+        将布局的宽度或高度平均分成几个等份
+        垂直/水平方向上占用中间所有空间
+
+RelativeLayout：
+    相对布局：用来控制其子View以相对定位的方式进行布局显示
+    相对布局较线性布局灵活、强大
+    相对布局相关属性较多：
+        兄弟视图之间：同方向对齐、反方向对齐
+        与父视图之间：同方向对齐、居中
+
+FrameLayout：
+    帧布局中的每一个子View都代表一个画面，默认以屏幕左上角作为（0，0）坐标
+    按照定义的先后顺序逐屏显示，后面出现的会覆盖前面出现的
+    可以通过android:layout_gravity等属性来控制子视图的位置
+
+属性的划分：
+    针对任何View的属性：
+        常用的基本属性：
+        内边距属性：padding
+        外边距属性：margin
+    只针对RelativeLayout的属性：
+        反方向对齐的实行：to/above/below
+        同方向对齐的属性：align
+        相对于父视图的属性：alignParent/center
+    只针对LinearLayout的属性：
+        权重：weight
+        方向：orientation
+
+ListView理解：
+    ListView是一种用来显示多个可滑动（item）列表的ViewGroup
+    需要使用Adapter将集合数据和每一个item所对应的布局，动态适配到ListView中显示
+    显示列表：listView.setAdapter(adapter)：不会使用缓存的item的视图对象
+    更新列表：adapter.notifyDatSetChanged()：使用所有缓存的item的视图对象
+
+ListView的Adapter：
+    ArrayAdapter：显示简单的文本列表
+        集合数据为List<String>或String[]
+    SimpleAdapter（继承自BaseAdapter）：显示复杂的列表
+        集合数据必须是List<Map<String, Object>>类型
+    BaseAdapter：显示复杂的列表
+        集合数据类型可以是任意类型的集合List<Xxx>
+    SimpleCursorAdapter：显示复杂的列表
+        集合数据为数据库查询结果集
+
+ 样式（style）：
+    理解：
+    多个视图属性的集合，在写布局时，当多个视图有很多相同的属性时，可以把这些相同的属性放在style.xml中定义成一个style
+    在布局文件中使用@style/xxx统一引用
+    作用：
+    复用视图标签属性
+    目标：
+    针对的是窗口中的某些视图
+    系同样式：
+    Android中也定义了某些系统样式可以使用
+    使用系统样式：@android:style/xxx
+
+主题（theme）：
+    理解：
+    主题的本质是style
+    在style.xml中定义，在AndroidManifest.xml中引用
+    作用：
+    复用视图标签属性
+    目标：
+    针对整个应用或某个Activity的界面
+    系统常用主题：
+    @android:style/Theme.Light.NoTitleBar：没有标题
+    @android:style/Theme.Light.NoTitleBar.FullScreen：全屏
+    @android:style/Theme.Dialog：对话框
+

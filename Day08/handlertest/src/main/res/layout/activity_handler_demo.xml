@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".HandlerDemoActivity">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:textColor="@android:color/holo_red_dark" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_increase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="增加" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_decrease"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="减少" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_pause"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="暂停" />
+
+</LinearLayout>

@@ -1,0 +1,6 @@
+rootProject.name = "Day10"
+include ':app'
+include ':eventtest'
+include ':moveimagedemo'
+include ':twiceclosedemo'
+include ':tipclosedemo'

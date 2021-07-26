@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ActivityTest</string>
+    <string name="start_normal">一般启动</string>
+    <string name="start_call_back">带回调启动</string>
+    <string name="please_enter_info">请输入信息</string>
+    <string name="second_activity">SecondActivity</string>
+    <string name="back_normal">一般返回</string>
+    <string name="back_call_back">带结果的返回</string>
+</resources>

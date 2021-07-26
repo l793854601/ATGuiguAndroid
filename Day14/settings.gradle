@@ -1,0 +1,5 @@
+rootProject.name = "Day14"
+include ':app'
+include ':contentprovidertest'
+include ':contentresolvertest'
+include ':contactdemo'

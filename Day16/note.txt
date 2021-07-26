@@ -1,0 +1,185 @@
+什么是Graphics：
+    Graphics，图案; 绘图; 图像;
+    手机上显示的任何界面，无论是文字、按钮或者图片，都是系统内置的一些API绘制的Graphics（图形、图像）
+    Graphics分为2D、3D两种，我们主要学习的是2D
+    在我们应用中操作最多的Graphics是图片
+    可以利用系统API绘制自定义Graphics
+
+相关API：
+    Bitmap：
+    位图，图片在内存中的数据对象，bmp、jpg、png
+
+    Drawable：
+    可绘制的对象，其可能是一张位图（BitmapDrawable），也可能是一个图形（ShapeDrawable），还有可能是一个图层（LayerDrawable）
+    我们根据画图的需求，创建相应的可绘制对象
+
+    Canvas：
+    画布，手机屏幕上用于绘图的目标区域
+
+    Paint：
+    画笔，它管理了每个画图工具的字体、颜色、样式。
+
+    Matrix：
+    矩阵，主要用于平面的缩放、平移、旋转等操作
+
+图片的缩放/旋转/平移处理
+    在Android中，可以通过Matrix来对图片进行缩放，旋转、平移
+    Matrix：矩阵，在图像处理方面，主要是用于平面的缩放、平移、旋转
+    相关API：
+        Matrix.postScale(float sx, float sy)：缩放，中心点在左上角
+        Matrix.postRotate(long degrees)：旋转
+        Matrix.postTranslate(float dx, float dy)：平移
+        Matrix.reset()：清空重置
+
+        ImageView.setImageMatrix(Matrix matrix)：设置图片的matrix
+        需要设置ImageView的scaleType属性为matrix，才可生效
+        本质是修改图片，而不是控件本身
+
+Shape图形图片：
+    在Android中，可以通过<shape>标签来配置自定义图形
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <shape xmlns:android="http://schemas.android.com/apk/res/android">
+        <!-- corners：圆角的半径为50dp -->
+        <corners android:radius="50dp" />
+
+        <!--
+            stroke：外边框
+            width：边框宽度
+            dashWidth：虚线长度
+            dashGap：虚线之间的间隙
+         -->
+        <stroke android:color="@color/black"
+            android:dashWidth="10dp"
+            android:dashGap="2dp"
+            android:width="1dp" />
+
+        <!--
+            size：尺寸
+            width：宽度，优先级小于match_parent，大于wrap_content
+            height：高度，优先级小于match_parent，大于wrap_content
+         -->
+        <size android:width="100dp"
+            android:height="50dp" />
+
+        <!-- padding：内边距 -->
+        <padding android:left="10dp"
+            android:top="10dp"
+            android:bottom="10dp"
+            android:right="10dp" />
+
+        <!-- solid：内部单色填充 -->
+    <!--    <solid android:color="@color/purple_200" />-->
+
+        <!--
+            gradient：内部渐变色填充
+            angle：角度，0为从左到右，90为从下到上
+            startColor：起始颜色
+            centerColor：中间颜色
+            endColor：结束颜色
+         -->
+        <gradient android:angle="0"
+            android:startColor="@color/teal_200"
+            android:centerColor="@color/purple_200"
+            android:endColor="@color/design_default_color_error" />
+    </shape>
+
+Selector：多状态图片
+    selector多状态图片可以在正常、按下、选中等状态下显示不同的图形
+    在使用时，可以把它的xml文件看作一个图片
+    它可以与图片或<shape>一起使用
+
+9patch图片（.9.png）：
+    9patch图片时一种特别的png图片，它在放大显示时，不会失真（指定区域复制扩展）
+    一般聊天气泡背景用的就是9patch
+    9patch图片可以分为三种类型区域：
+    1：正中间区域：可向水平和垂直方向复制扩展（并不是拉伸）
+    2：中上、中下、中左、中右区域：只能向一个方向扩展（并不是拉伸）
+    3：四个角区域：大小不会变化（不会被复制扩展）
+
+    使用9patch图片的好处：
+    1.图片放大不失真
+    2.使apk体积更小
+
+PopupWindow：
+    //  构造方法，指定包含的视图、宽、高
+    PopupWindow(View convertView, int width, int height)
+    //  显示在指定视图的下面，x轴、y轴的偏移量
+    showAsDropDown(View anchor, int xOff, int yOff)
+    //  设置背景图片，必须设置，否则动画没作用
+    setBackgroundDrawable(Drawable background)
+    //  判断是否正在显示
+    boolean isShowing()
+    //  移除
+    dismiss()
+
+Context：
+    理解：
+    Context是提供了关于应用环境全局信息的抽象类，通过它的对象，才可以操作系统或应用的相关资源
+
+    使用方式：
+    1.调用方法：startActivity、startService、getSystemService、getPackageManager、...
+    2.当做参数传递给方法：LayoutInflater.from(Context)、new Intent(Context context, Class name)、new View(Context context)、...
+
+    Context最主要的功能是加载和访问资源：
+    1.启动或停止Activity/Service
+    2.发送广播/注册广播接收器
+    3.加载布局/创建视图对象
+    4.获取应用环境全局信息
+
+    实现分类：
+    Activity、Service、Application、其他实现...
+
+    Application：
+    每个应用只有一个此对象，本质为单例
+    Context类型的对象都可以通过getApplication()、getApplicationContext()方法，得到此对象
+    应用全局数据内存级的共享容器
+    生命周期：创建：应用启动切其对象不存在（创建应用的进程之后）
+            死亡：应用退出不会销毁Application对象
+                 应用的进程被主动或被动杀死时，Application对象销毁
+
+    选择Activity还是Application：
+    显示Dialog时，必须使用Activity
+    使用Adapter、创建视图等操作时，最好使用Activity（Application生命周期很长，使用Application可能会引起内存泄露）
+    显示地图时，必须使用ApplicationContext
+    考虑是否有内存泄露的场景，则避免使用Application
+
+ANR：
+    Application Not Responding（应用无响应）
+    原因：程序在UI线程（主线程）对用户操作的响应时间过长
+    类型：按键或触摸事件在特定事件内无响应（大概5s以上）
+         BroadcastReceiver在特定事件内无法处理完成（大概10s以上）onReceive()
+         Service在特定时间内无法处理完成（大概20s以上）
+
+    广播ANR的时长（前台、后台）：
+        static final int BROADCAST_FG_TIMEOUT = 10*1000;
+        static final int BROADCAST_BG_TIMEOUT = 60*1000;
+
+    按键操作ANR的时长：
+        static final int KEY_DISPATCHING_TIMEOUT = 5*1000;
+
+    服务ANR的时长（前台、后台）：
+        static final int SERVICE_TIMEOUT = 20*1000;
+        static final int SERVICE_BACKGROUND_TIMEOUT = SERVICE_TIMEOUT * 10;
+
+    解决：不要在UI线程（主线程）做耗时的事
+         耗时的操作放在子线程中进行
+         服务和广播接收器的生命周期回调方法都是在主线程中执行的
+
+屏幕横竖屏切换：
+    横竖屏切换时，Activity会被销毁并重新创建，经历的回调方法：
+    第一次创建：onCreate()
+    屏幕方向发生改变：onSaveInstanceState()->onDestroy()->onCreate()
+
+    解决方案：
+    1.在onSaveInstanceState()方法中保存必要的数据，在onCreate()方法中恢复数据（注意savedInstanceState可能为空）
+    2.AndroidManifest.xml中<activity>内配置android:configChanges="orientation|keyboardHidden|screenSize"（不让Activity因横竖屏切换而销毁）
+
+    如何指定Activity的方向固定（以竖屏为例）：
+    1.静态：AndroidManifest.xml中<activity>内配置android:screenOrientation="portrait"
+    2.动态：代码中设置setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+
+    如果获取Activity当前的屏幕方向：
+    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT：竖屏
+    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE：横屏
+    Activity.getResources().getConfiguration().orientation;

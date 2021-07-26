@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.contentprovidertest">
+
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Day14">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            authorities：uri中authorities值，一般为ContentProvider所在类的全类名（小写）
+            exported：其他应用是否可以访问，最好显式赋值为true
+           -->
+        <provider
+            android:multiprocess="true"
+            android:authorities="com.example.contentprovidertest.studentprovider"
+            android:name=".StudentProvider"
+            android:exported="true"
+            android:enabled="true" />
+    </application>
+
+</manifest>

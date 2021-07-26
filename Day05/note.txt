@@ -1,0 +1,66 @@
+Android数据存储方式：
+    Android支持的数据存储方式：
+    SharedPreferences存储（以下简称SP存储）
+    手机内部文件存储
+    手机外部文件存储
+    Sqlite数据库存储
+    远程服务器存储
+
+SP存储：
+    SP专门用来存储一些单一的小数据（轻量级数据）
+    存储数据的类型：boolean、float、int、long、String
+    数据保存的路径：/data/data/包名/shared_prefs/yyy.xml
+    自API级别17起，MODE_WORLD_READABLE和MODE_WORLD_WRITEABLE模式已被弃用。即只能访问当前应用的SP
+    应用卸载时，会删除此数据（应用卸载时，data/data/包名会被删除，因此SP也会被删除）
+
+    相关API：
+    SharedPreferences：对应SP文件的接口
+        context.SharedPreferences(int mode)：根据类名，得到SP对象，如果对应xml文件不存在，则会自动创建
+        context.getSharedPreferences(String name, int mode)：得到SP对象，如果对应xml文件不存在，则会自动创建
+            name：文件名（不带.xml）
+            mode：模式，目前仅可以为：Context.MODE_PRIVATE
+        Editor sp.edit()：得到Editor对象（Editor用于更新数据）
+        Xxx sp.getXxx(name, defaultValue)：根据name得到对应的数据，如果数据不存在则返回defaultValue
+    Editor：sp用于更新数据的接口
+        Editor put(name, value)：保存一个name-value键值对（此时没有真正保存）
+        Editor remove(name)：根据name，移除对应的数据（此时没有真正移除）
+        commit()：提交更新（同步，并且会返回更新结果）
+        apply()：提交更新（异步）
+
+手机内部存储：
+    应用运行需要的一些较大的数据或图片，可以用文件保存在手机的内部
+    文件类型：任意
+    数据存储的位置：/data/data/包名/files
+    数据只能被当前应用读取，其他应用不能访问
+    应用卸载时，会删除此数据
+
+    相关API：
+    读取文件：
+        FileInputStream fis = openFileInput("logo.png");
+    保存文件：
+        FileOutputStream fos = openFileOutput("logo.png", MODE_PRIVATE);
+    得到files文件夹对象：
+        File fileDir = getFilesDir();
+    操作assets下的文件：
+        得到AssetManager：context.getAssets();
+        读取文件：InputStream open(String fileName);
+    加载图片：
+        Bitmap BitmapFactory.decodeFile(String pathName);
+
+手机外部存储：
+    应用运行用到的数据文件（图片）可以保存至外部存储
+    文件类型：任意
+    路径：不同版本不一样
+        /storage/emulated/0/Android/data/包名/files
+    必须保证外部存储已挂载才能读写，否则不能操作
+    操作外部存储需要在AndroidManifest.xml中添加权限"android.permission.WRITE_EXTERNAL_STORAGE"
+    以Android10（API 级别 29）及更高版本为目标平台的应用在默认情况下被授予了对外部存储空间的分区访问权限
+
+    相关API：
+    Environment：操作外部存储的工具类
+        得到外部存储的状态：Environment.getExternalStorageState();
+        得到外部存储的路径：context.getExternalFilesDir(String type);
+        外部存储可用（已挂载）的状态：Environment.MEDIA_MOUNTED
+    context.getExternalFilesDir();
+
+

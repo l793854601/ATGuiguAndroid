@@ -1,0 +1,45 @@
+实现文章列表：
+功能点：
+1.使用Okhttp请求网络
+2.使用Gson将JSON解析为model
+3.使用Glide加载网络图片
+4.ListView+Adapter显示列表
+
+文章列表接口："http://api.coincent.cn/portal/article/list/1/20"
+
+图片地址："http://api.coincent.cn/portal/image/" + 文章的cover
+比如：http://api.coincent.cn/portal/image/1599380542879_752202045473161216.png
+
+动态显示图片：
+-->Bitmap-->手机本地的图片文件-->服务器的图片文件
+
+图片的三级缓存:
+    一级缓存：内存缓存，缓存的是Bitmap对象，使用Map<String, Bitmap>结构保存，key是url
+    二级缓存：本地缓存，缓存的是图片文件，建议保存在外部存储
+    三级缓存：远程服务器缓存，缓存的是图片文件，需要通过url下载
+
+如何使用三级缓存：
+简易版：
+    1）根据url从一级缓存中取出对饮国的Bitmap对象
+    如果有，显示
+    如果没有，则进入2）
+    2）从二级缓存中查找：得到文件名并在外部存储的缓存目录加载对应的图片，得到Bitmap
+    如果有，显示，并加入到一级缓存中
+    如果没有，则进入3）
+    3）从服务器下载图片文件
+    如果有，显示，并加入到一级缓存、二级缓存
+    如果没有，则显示错误的图片
+
+进阶版：考虑缓存时间、最近最久使用（LRU淘汰算法）、线程同步等，参考Glide
+
+在ListView中使用ImageUtils加载图片，图片数据会乱
+原因：
+    ListView的复用机制，图片下载完毕，再次设置给ImageView时，ImageView可能已经被复用。
+解决：
+    1）将图片的url作为ImageView的tag设置：imageView.setTag(imageUrl)
+    2）在子线程准备请求网络加载图片时，比较准备加载图片的url，与ImageView保存的url，是否相同。
+       如果相同，则继续加载
+       如果不同，则说明ImageView被复用了，不需要再加载了
+    3）在切换到主线程，准备设置图片时，比较准备加载图片的url，与ImageView保存的url，是否相同。
+       如果相同，则设置
+       如果不同，则说明ImageView被复用了，不需要设置了

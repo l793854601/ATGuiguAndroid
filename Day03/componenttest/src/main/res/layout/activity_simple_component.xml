@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SimpleComponentActivity">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_simple_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#999999"
+        android:textColor="#ff0000"
+        android:textSize="20sp"
+        android:text="这是TextView的内容" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_simple_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入手机号"
+        android:maxLines="1"
+        android:inputType="phone" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_simple_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="提 交" />
+
+    <!--
+        background：背景颜色/图片
+        src：前景颜色/图片
+     -->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_simple_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:background="@android:drawable/alert_dark_frame"
+        android:src="@android:drawable/ic_media_play"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="爱好：" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cb_simple_basketball"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="篮球" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cb_simple_football"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="足球" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cb_simple_ping_pang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="乒乓球" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="确定"
+            android:onClick="onConfirmClick"/>
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/rg_simple_gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rb_simple_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="男" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rb_simple_female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="女" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/rb_simple_nomale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="男女不限" />
+
+    </RadioGroup>
+
+</LinearLayout>

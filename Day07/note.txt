@@ -1,0 +1,93 @@
+远程服务器存储
+说明：
+    对于互联网APP来说，可能需要通过请求向服务器提交数据请求，也可能需要从服务器端获取数据显示
+
+    如何编码实现客户端与服务器端的交互？
+        1.JDK内置的原生API：
+        HttpUrlConnection
+        2.Android内置的包装API
+        HttpClient浏览器（已废弃）
+        3.异步网络请求框架
+        Volley
+        xUtils
+        OkHttp（补充）
+        Retrofit（补充）
+
+    注意：
+        访问网络，需要声明权限：android.permission.Internet
+        访问网络，必须在子线程执行（不能阻塞主线程，会抛出异常）
+
+HTTP协议：
+    一次HTTP请求的过程：
+    1.建立连接
+    2.发送请求
+    3.处理请求
+    4.返回数据
+    5.发送请求2
+    ...
+    6.关闭连接
+
+    HTTP请求的常用方式：
+    GET
+    POST
+
+    HTTP请求的格式：
+    请求行
+    请求头
+    请求体
+
+    //  请求行：用于描述客户端的请求方式、请求的资源名称、以及使用HTTP协议的版本号
+    POST /books/java.html HTTP/1.1
+    //  请求头：用于描述客户端请求哪台主机，以及客户端的一些环境信息等
+    Accept: */*
+    Accept-Language: en-us
+    Connection: Keep-Alive
+    Host: localhost
+    Referer: http://localhost/links.jsp
+    User-Agent: Mozilla/4.0
+    Accept-Encoding: gzip, deflat
+    //  一个空行
+
+    //  请求体
+    name=tom&password=123
+
+    HTTP响应的格式：
+    响应行
+    响应头
+    响应体
+
+    //  响应行：用于描述服务器对请求的处理结果（协议版本、响应状态码、响应信息）
+    HTTP/1.1 200 OK
+    //  响应头：用于描述服务器的基本信息，以及数据的描述
+    //  服务器通过这些数据的描述信息，可以通知客户端如何处理等一会儿它回送的数据
+    Server: Microsoft-IIS/5/0
+    Date: Thu, 13 Jul 2000 05:46:53 GMT
+    Content-Length: 2291
+    Content-Type: text/html
+    Cache-control: private
+    //  一个空行
+
+    //  响应体：代表服务器向客户端回送的数据
+    <HTML>
+    <BODY>
+    ......
+
+使用HttpUrlConnection：
+    1.URL：包含请求地址的类
+        URL(String path)：包含请求路径的构造方法
+        URLConnection openConnection()：得到连接对象
+    2.HttpUrlConnection：代表与服务器连接的类
+        setMethod(String method)：设置请求方式 "GET"/"POST"
+        setConnectionTimeout(long time)：设置连接超时时间，单位为ms
+        setReadTimeout(long time)：设置读取服务器返回数据的时间
+        connect()：连接服务器
+        int getResponseCode()：得到响应码（200为正常）
+        int getContentLength()：得到服务器返回数据的长度（单位为字节）
+        getOutputStream()：返回一个输出流（从客户端发送给服务端的数据输出流）
+        getInputStream()：返回一个输入流（从服务端返回给客户端的数据输入流）
+
+HttpClient（已废弃，不建议使用）
+Volley（目前不是主流的框架，不建议使用）
+
+
+

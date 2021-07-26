@@ -1,0 +1,5 @@
+rootProject.name = "Day13"
+include ':app'
+include ':broadcasttest'
+include ':broadcastreceivertest'
+include ':systembroadcasttest'

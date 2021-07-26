@@ -1,0 +1,4 @@
+rootProject.name = "Day08"
+include ':app'
+include ':handlertest'
+include ':jsontest'
