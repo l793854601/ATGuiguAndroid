@@ -9,3 +9,5 @@
  
  尚硅谷Android视频教程《15天精讲精练_参悟Android核心技术-下》：https://www.bilibili.com/video/BV1BW411L7th
  
+ 笔记在每一天的note.txt中
+ 
